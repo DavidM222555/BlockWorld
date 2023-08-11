@@ -1,4 +1,4 @@
-# BlockWorld
+# Block World
 Basic voxel engine project in C++. Primarily used to explore basic shader techniques and optimizations related to voxels.
 
 # Acknowledgements
