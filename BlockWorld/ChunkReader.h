@@ -18,8 +18,6 @@ private:
 
 public:
 	ChunkReader(directory dirName);
-
 	Chunk* readChunk(int x, int y, int z);
-
 };
 

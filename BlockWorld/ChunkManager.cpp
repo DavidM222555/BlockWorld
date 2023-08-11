@@ -67,8 +67,6 @@ ChunkManager::ChunkManager(int xRange, int yRange, int zRange) : cio("SavedChunk
 			for (int k = -1 * zRange; k < zRange; k++) {
 
                 if (!cio.containsChunk(i, j, k)) {
-                    // Chunk* chunkToInsert = new Chunk();
-                    // Chunk* currentChunk = new Chunk();
                     unique_ptr<Chunk> currentChunk = make_unique<Chunk>();
 
                     // From here we now utilize the height map for generating just a single chunk.
@@ -110,7 +108,6 @@ void ChunkManager::updateChunkAndNeighbors(int x, int y, int z)
     for (int i = max(x - 1, -1 * _xRange); i <= min(x + 1, _xRange); i++) {
         for (int j = max(y - 1, -1 * _yRange); j <= min(y + 1, _yRange); j++) {
             for (int k = max(z - 1, -1 * _zRange); k <= min(z + 1, _zRange); k++) {
-
                 auto* chunkToModify = _chunkMap.at(GridCoordinate(i, j, k)).get();
                 auto newBuffer = createBuffer(chunkToModify, i, j, k);
 
@@ -134,12 +131,13 @@ vector<float> ChunkManager::getBuffersInArea(int centerX, int centerY, int cente
     for (int i = max(centerX - radius - 1, -1 * _xRange); i < min(centerX + radius + 1, _xRange); i++) {
         for (int j = max(centerY - radius - 1, -1 * _yRange); j < min(centerY + radius + 1, _yRange); j++) {
             for (int k = max(centerZ - radius - 1, -1 * _zRange); k < min(centerZ + radius + 1, _zRange); k++) {
+
                 // Generate the chunk at this point in the map if it doesn't currently exist
                 if (_chunkMap.find(glm::vec3(i, j, k)) == _chunkMap.end()) {
                     // auto* chunk = cio.readChunk(i, j, k);
-                    _chunkMap.insert({ glm::vec3(i, j, k), unique_ptr<Chunk> (cio.readChunk(i, j, k))});
-
+                    _chunkMap.insert({ glm::vec3(i, j, k), unique_ptr<Chunk> (cio.readChunk(i, j, k))});               
                 }
+
             }
         }
     }
@@ -172,19 +170,19 @@ vector<float> ChunkManager::getBuffersInArea(int centerX, int centerY, int cente
     }
 
     // Go through and free memory associated with chunks in the map that are not currently visible
-    auto mapIt = _chunkMap.begin();
+    //auto mapIt = _chunkMap.begin();
 
-    while (mapIt != _chunkMap.end())
-    {
-        if (seenCoordinates.find(mapIt->first) == seenCoordinates.end()) {
-            activeChunkCoordinates.erase(mapIt->first);
-            mapIt = _chunkMap.erase(mapIt++);
-        }
-        else
-        {
-            mapIt++;
-        }
-    }
+    //while (mapIt != _chunkMap.end())
+    //{
+    //    if (seenCoordinates.find(mapIt->first) == seenCoordinates.end()) {
+    //        activeChunkCoordinates.erase(mapIt->first);
+    //        mapIt = _chunkMap.erase(mapIt++);
+    //    }
+    //    else
+    //    {
+    //        mapIt++;
+    //    }
+    //}
 
     return buffer;
 }

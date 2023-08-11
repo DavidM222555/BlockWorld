@@ -49,5 +49,6 @@ string getRunLengthEncoding(Chunk* chunk)
 		rleString += std::to_string(currentCount) + prevChar;
 	}
 
+
 	return rleString;
 }

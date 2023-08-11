@@ -35,8 +35,8 @@ std::array<std::array<std::array<Cube, CHUNK_SIZE>, CHUNK_SIZE>, CHUNK_SIZE> dec
 
 		while (numberOfCharLeft != 0) {
 			int yCoordinate = int(floor(chunkProgressCounter / (CHUNK_SIZE * CHUNK_SIZE)));
-			int zCoordinate = int(chunkProgressCounter / CHUNK_SIZE) % 32;
-			int xCoordinate = chunkProgressCounter % 32;
+			int zCoordinate = int(chunkProgressCounter / CHUNK_SIZE) % CHUNK_SIZE;
+			int xCoordinate = chunkProgressCounter % CHUNK_SIZE;
 
 			// Check if the current character is air or not, if it is then we set the cube to inactive and don't worry about
 			// the texture.

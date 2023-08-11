@@ -1,5 +1,8 @@
 #include "VertexArray.h"
 
+// Utilized TheCherno's following videos for some help on how to layout various OpenGL primitives:
+// https://www.youtube.com/watch?v=x0H--CL2tUI&ab_channel=TheCherno
+
 VertexArray::VertexArray()
 {
 	glGenVertexArrays(1, &_ID);

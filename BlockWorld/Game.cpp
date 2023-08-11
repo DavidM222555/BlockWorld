@@ -1,7 +1,11 @@
 #include "Game.h"
 
+
+// Extensive use of code from the following resource: 
+// https://learnopengl.com/
+
 Camera camera(glm::vec3(0, 50.0f, 0));
-ChunkManager cm(10, 7, 10);
+ChunkManager cm(25, 8, 25);
 World world(cm, Player());
 
 float lastX = 1200 / 2.0f;
@@ -11,8 +15,7 @@ bool firstMouse = true;
 double deltaTime = 0.0;
 double lastFrame = 0.0;
 
-int RADIUS = 6;
-int MIN_RADIUS = 5;
+int RADIUS = 5;
 float GRAVITY = -0.055f;
 
 const double FPS = 1.0 / 100.0;
@@ -53,7 +56,6 @@ void processInput(GLFWwindow* window, World& world)
     }
 
 }
-
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) 
 {
@@ -144,23 +146,15 @@ GLFWwindow* initGlfwWindow(int width, int height)
 
 std::future<vector<float>> gatherBuffersAsync(ChunkManager& cm, GridCoordinate& chunkPlayerIsIn)
 {
-    auto gatherBuffers = std::async(std::launch::async, [&cm, &chunkPlayerIsIn] {
+    auto gatheredBuffers = std::async(std::launch::async, [&cm, &chunkPlayerIsIn] {
             auto buffers =  cm.getBuffersInArea(int(chunkPlayerIsIn.x), int(chunkPlayerIsIn.y), int(chunkPlayerIsIn.z), RADIUS);
             return buffers;
         });
 
-    return gatherBuffers;
+    return gatheredBuffers;
 }
 
-std::future<vector<float>> gatherChunksAfterBlockDestruction(ChunkManager& cm, GridCoordinate& chunkPlayerIsIn)
-{
-    auto gatherBuffers = std::async(std::launch::async, [&cm, &chunkPlayerIsIn] {
-            auto buffers = cm.getBuffersCurrentlyInMap();
-            return buffers;
-        });
 
-    return gatherBuffers;
-}
 
 Game::Game(std::string vertexShaderPath, std::string fragShaderPath, unsigned int screenWidth, unsigned int screenHeight) :
     window(initGlfwWindow(screenWidth, screenHeight)), fpsWidget(window),
@@ -219,45 +213,15 @@ void Game::loop()
             render(chunkBuffers, chunkPlayerIsIn, currentFPS);
             lastFrameTime = currentTime;
 
-            //if (needToUpdateBuffers && !gatheringResourcesAfterBlockDestructionFlag)
-            //{
-
-            //    chunksAfterBlockDestructionFuture = gatherChunksAfterBlockDestruction(cm, currentChunkPlayerIsIn);
-            //    gatheringResourcesAfterBlockDestructionFlag = true;
-            //}
-
-            //if (gatheringResourcesAfterBlockDestructionFlag && chunksAfterBlockDestructionFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready)
-            //{
-            //    // chunkBuffers = cm.getBuffersCurrentlyInMap();
-            //    chunkBuffers = chunksAfterBlockDestructionFuture.get();
-
-            //    VertexBuffer newVb = VertexBuffer(&chunkBuffers[0], chunkBuffers.size() * sizeof(float));
-            //    vao.addBuffer(newVb, layout);
-
-            //    gatheringResourcesAfterBlockDestructionFlag = false;
-            //}
-
-
-            // If the player has moved chunks then we need to render new chunks on the outskirts of the map.
-            // This is done by creating a future and setting a flag that says we are currently gathering resources 
-            // and should wait for this future to be done before consuming it.
-
-            if (currentChunkPlayerIsIn != chunkPlayerIsIn && !gatheringResources)
+            if (currentChunkPlayerIsIn != chunkPlayerIsIn)
             {
-                gatherResourcesFuture = gatherBuffersAsync(cm, currentChunkPlayerIsIn);
-                gatheringResources = true;
-            }
-
-            // Test if the future is ready to consume
-            if (gatheringResources && gatherResourcesFuture.wait_for(std::chrono::milliseconds(0)) == std::future_status::ready)
-            {
-                chunkBuffers = gatherResourcesFuture.get();
+                chunkBuffers = cm.getBuffersInArea(currentChunkPlayerIsIn.x, currentChunkPlayerIsIn.y, currentChunkPlayerIsIn.z, RADIUS);
                 chunkBuffers.shrink_to_fit();
 
                 VertexBuffer newVb = VertexBuffer(&chunkBuffers[0], chunkBuffers.size() * sizeof(float));
                 vao.addBuffer(newVb, layout);
 
-                gatheringResources = false;
+               
             }
 
 

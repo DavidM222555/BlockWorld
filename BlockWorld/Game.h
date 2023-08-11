@@ -41,7 +41,7 @@ private:
 	unsigned int width;
 
 public:
-	Game(std::string vertexShaderPath, std::string fragShaderPath, unsigned int screenHeight = 800, unsigned int screenWidth = 600);
+	Game(std::string vertexShaderPath, std::string fragShaderPath, unsigned int screenHeight = 1600, unsigned int screenWidth = 1200);
 	
 	void clearColor(float r, float g, float b, float a);
 	void render(const vector<float>& buffer, const GridCoordinate& chunkPlayerIsIn, const unsigned int currentFPS);

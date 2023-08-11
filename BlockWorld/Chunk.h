@@ -11,7 +11,6 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/hash.hpp>
 
-
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 #include "BufferLayout.h"
@@ -23,12 +22,7 @@ using std::unordered_set;
 using std::array;
 using std::unordered_map;
 
-// These are here in case I want to allow for variable dimension chunks later
-const int CHUNK_LENGTH = 64;
-const int CHUNK_HEIGHT = 64;
-const int CHUNK_DEPTH = 64;
-
-const int CHUNK_SIZE = 32;
+const int CHUNK_SIZE = 16;
 
 const unsigned int BUFFER_SIZE = CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 36 * 6 * sizeof(float);
 
@@ -48,7 +42,6 @@ public:
 	{
 		return x > 0 && y > 0 && z > 0 && x < CHUNK_SIZE - 1 && y < CHUNK_SIZE - 1 && z < CHUNK_SIZE - 1;
 	}
-
 
 	inline vector<float> getBuffer() { return chunkBuffer; }
 	inline void setBuffer(vector<float>& otherBuffer) { chunkBuffer = otherBuffer; }

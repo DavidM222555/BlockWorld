@@ -139,7 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Downloads\glad.c" />
+    <ClCompile Include="glad.c" />
     <ClCompile Include="BlockWorld.cpp" />
     <ClCompile Include="BufferLayout.cpp" />
     <ClCompile Include="Chunk.cpp" />

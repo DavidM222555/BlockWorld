@@ -8,12 +8,11 @@
 #include <iostream>
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+
 
 int main()
 {
-    Game game("test_shader.vert", "test_shader.frag", 1200, 800);
+    Game game("test_shader.vert", "test_shader.frag", 1800, 1000);
     game.loop();
 
     return 0;
